@@ -1,27 +1,52 @@
 import React from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  error?: string;
 }
 
-export function Input({ label, error, className = '', id, ...props }: InputProps) {
-  const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
+export function Input({ label, className = '', ...props }: Props) {
   return (
     <div className="flex flex-col gap-1">
-      {label && (
-        <label htmlFor={inputId} className="text-xs font-semibold text-[#3e3e3c] uppercase tracking-wide">
-          {label}
-        </label>
-      )}
+      {label && <label className="text-xs font-medium text-white/50 uppercase tracking-wider">{label}</label>}
       <input
-        id={inputId}
-        className={`border rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0070D2] focus:border-[#0070D2] transition ${
-          error ? 'border-[#c23934]' : 'border-[#dddbda]'
-        } ${className}`}
+        className={`bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${className}`}
         {...props}
       />
-      {error && <span className="text-xs text-[#c23934]">{error}</span>}
+    </div>
+  );
+}
+
+interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+}
+
+export function TextArea({ label, className = '', ...props }: TextAreaProps) {
+  return (
+    <div className="flex flex-col gap-1">
+      {label && <label className="text-xs font-medium text-white/50 uppercase tracking-wider">{label}</label>}
+      <textarea
+        className={`bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none ${className}`}
+        {...props}
+      />
+    </div>
+  );
+}
+
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  label?: string;
+  options: { value: string; label: string }[];
+}
+
+export function Select({ label, options, className = '', ...props }: SelectProps) {
+  return (
+    <div className="flex flex-col gap-1">
+      {label && <label className="text-xs font-medium text-white/50 uppercase tracking-wider">{label}</label>}
+      <select
+        className={`bg-[#1a1f2e] border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${className}`}
+        {...props}
+      >
+        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
     </div>
   );
 }

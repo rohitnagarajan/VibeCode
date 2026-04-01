@@ -1,23 +1,32 @@
-import { QuoteProvider, useQuoteStore } from './store/quoteStore';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import { StoreProvider } from './store';
 import { AppShell } from './components/layout/AppShell';
-import { QuoteList } from './components/quote/QuoteList';
-import { QuoteEditor } from './components/quote/QuoteEditor';
-
-function AppContent() {
-  const { state } = useQuoteStore();
-  const activeQuote = state.quotes.find(q => q.id === state.activeQuoteId);
-
-  return (
-    <AppShell>
-      {activeQuote ? <QuoteEditor key={activeQuote.id} quote={activeQuote} /> : <QuoteList />}
-    </AppShell>
-  );
-}
+import { Dashboard } from './components/dashboard/Dashboard';
+import { TemplateEditor } from './components/editor/TemplateEditor';
+import { StudioControl } from './components/studio/StudioControl';
+import { OutputView } from './components/studio/OutputView';
+import { BrandSettings } from './components/settings/BrandSettings';
 
 export default function App() {
   return (
-    <QuoteProvider>
-      <AppContent />
-    </QuoteProvider>
+    <StoreProvider>
+      <HashRouter>
+        <Routes>
+          {/* Clean output window - no chrome */}
+          <Route path="/output" element={<OutputView />} />
+          {/* Main app with sidebar */}
+          <Route path="*" element={
+            <AppShell>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/editor/:id" element={<TemplateEditor />} />
+                <Route path="/studio" element={<StudioControl />} />
+                <Route path="/settings" element={<BrandSettings />} />
+              </Routes>
+            </AppShell>
+          } />
+        </Routes>
+      </HashRouter>
+    </StoreProvider>
   );
 }
